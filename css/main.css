@@ -1,0 +1,29 @@
+body {
+    background-color: #efefef;
+    background-image: url('../img/nature.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+main {
+    padding: 4rem;
+    background-color: rgba(0, 0, 0, .5);
+    width: 50vw;
+    height: 50vh;
+    margin: auto auto;
+}
+
+#main-menu .list-group-item:hover {
+    background-color: #3B71CA;
+    color: white;
+    cursor: pointer;
+}
+
+.main-title {
+    color: #DC4C64;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#get-code {
+    margin-top: 5rem;
+}
