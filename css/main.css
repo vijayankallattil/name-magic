@@ -1,6 +1,6 @@
 body {
     background-color: #efefef;
-    background-image: url('../img/nature.jpg');
+    background-image: url('../img/lightning.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -26,4 +26,12 @@ main {
 
 #get-code {
     margin-top: 5rem;
+    padding: 3rem;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 1rem;
+
+    box-shadow: -1px 6px 23px -1px rgba(156, 156, 156, 0.75);
+    -webkit-box-shadow: -1px 6px 23px -1px rgba(156, 156, 156, 0.75);
+    -moz-box-shadow: -1px 6px 23px -1px rgba(156, 156, 156, 0.75);
 }
