@@ -14,11 +14,11 @@
 <body>
 
     <div id="app" class="container">
-        <div id="get-code" class="mt-5" v-if="!showNames">
+        <div id="get-code" class="mt-5" v-if="!showTable">
             <div class="d-flex justify-content-center">
                 <img src="img/magic.jpg" alt="" width="20%" height="20%">
             </div>
-            <form method="post" @submit="switchNames(passCode)">
+            <form method="post" @submit="switchNames(passCode); return false;">
                 <label class="display-6" for="passcode text-white">Enter passcode to start</label>
                 <input class="form-control form-control-lg" v-model="passCode" type="password" name="passcode"
                     id="passcode" pattern="\d{4}" minlength="4" maxlength="4">
@@ -31,17 +31,38 @@
                 <form>
 
         </div>
-        <div id="display-names" v-if="showNames">
-            <table class="table table-bordered">
+        <div id="display-table" v-if="showTable">
+            <div class="selector-div mb-3 fw-bold">
+                <ul class="list-group select-options">
+                    <li class="list-group-item" v-bind:class="{'active': peopleSelected}" @click="peopleSelected=true">People</li>
+                    <li class="list-group-item" v-bind:class="{'active': !peopleSelected}" @click="peopleSelected=false">Places</li>
+                </ul>
+            </div>
+            <div class="data text-white">
+                
+            </div>
+            <table class="table table-bordered table-striped name-table" v-if="peopleSelected">
                 <tr>
-                    <td class="index">No.</td>
-                    <td class="name-text">Name</td>
+                    <th class="index">#</th>
+                    <th class="name-text">Name</th>
                 </tr>
                 <tr v-for="(name, index) in nameList">
-                    <td class="index">{{index}}</td>
+                    <td class="index">{{index+1}}</td>
                     <td class="name-text">{{name}}</td>
                 </tr>
             </table>
+
+            <table class="table table-bordered table-striped place-table" v-if="!peopleSelected">
+                <tr>
+                    <th class="index">#</th>
+                    <th class="name-text">Name</th>
+                </tr>
+                <tr v-for="(name, index) in placeList">
+                    <td class="index">{{index+1}}</td>
+                    <td class="name-text">{{name}}</td>
+                </tr>
+            </table>
+
         </div>
     </div>
 
@@ -140,14 +161,142 @@
                     "Mike Hussey",
                     "Matthew Hayden",
                     "Jack Hobbs",
-                    "Lasith Malinga"
+                    "Lasith Malinga",
+                    "Pariyanampatta Divakaran",
+"Kalamandalam Kesavan Namboodiri",
+"Kalamandalam Sivadas",
+"Kalamandalam Sajan",
+"Kalamandalam Vijayakumar",
+"V.P. Ramakrishnan Nair",
+"Kottarakkara Ganga",
+"Kottakkal Sasidharan Nair",
+"Kalamandalam Prasanth",
+"Kalamandalam Gopalakrishnan",
+"Kalakendram Muraleedharan",
+"Kalluvazhi Vasu",
+"Chandramana Govindan Namboothiri",
+"Chandramana Narayanan Namboothiri",
+"Kalamandalam Vasu Pisharody",
+"Kalamandalam Sreekandhan Nair",
+"Nelliyodu Vasudevan Namboodiri"
                 ];
 
-                let nameList = ref(names)
-                let showNames = ref(false)
+                var places = [
+                "Glasgow",
+                "Sapporo",
+                "Denver",
+                "Melbourne",
+                "Vancouver",
+                "Cleveland",
+                "Dubai",
+                "Tampa",
+                "Brussels",
+                "Bilbao",
+                "Zurich",
+                "New York",
+                "Ottawa",
+                "Salt Lake City",
+                "Krakow",
+                "Philadelphia",
+                "Charlotte",
+                "Perth",
+                "Toronto",
+                "Warsaw",
+                "Houston",
+                "Calgary",
+                "Cape Town",
+                "Miami",
+                "Hamburg",
+                "Seoul",
+                "Austin",
+                "Minneapolis",
+                "Seattle",
+                "San Francisco",
+                "Lyon",
+                "Las Vegas",
+                "Nashville",
+                "Atlanta",
+                "Stockholm",
+                "Kuala Lumpur",
+                "Amsterdam",
+                "Rome",
+                "Boston",
+                "Gothenburg",
+                "St. Louis",
+                "Auckland",
+                "Doha",
+                "Milan",
+                "Richmond",
+                "Singapore",
+                "Chicago",
+                "Paris",
+                "Vienna",
+                "Dallas",
+                "Washington",
+                "New Orleans",
+                "Lisbon",
+                "Bangkok",
+                "Rio de Janeiro",
+                "Bordeaux",
+                "San Diego",
+                "Barcelona",
+                "Los Angeles",
+                "Toulouse",
+                "Helsinki",
+                "London",
+                "Munich",
+                "Madrid",
+                "Raleigh",
+                "Berlin",
+                "Montreal",
+                "Nagoya",
+                "Sydney",
+                "Detroit",
+                "San Jose",
+                "Portland",
+                "Dublin",
+                "Beijing",
+                "Shanghai",
+                "Taipei",
+                "Birmingham",
+                "Rochester",
+                "Phoenix",
+                "Frankfurt",
+                "Porto",
+                "Orlando",
+                "Valencia",
+                "Osaka",
+                "Istanbul",
+                "Brisbane",
+                "Tokyo",
+                "Oslo",
+                "Sao Paulo",
+                "Baltimore",
+                "Tucson",
+                "Prague",
+                "Naples",
+                "Honolulu",
+                "Edmonton",
+                "Athens",
+                "Nantes",
+                "Copenhagen",
+                "Hong Kong",
+                "Pittsburgh"
+                ];
+
+                let nameList = ref(names);
+                let showTable = ref(false); // show login screen if this is false
+                let showNames = ref(true); // show places if this is false
+                let placeList = ref(places);
+                let peopleSelected = ref(true); // use people list if this is true, also use this flag to visualize list group selection
+                let dataList = nameList;
                 return {
                     nameList,
-                    showNames
+                    placeList,
+                    showTable,
+                    showNames,
+                    peopleSelected,
+                    dataList
                 }
             },
             methods: {
@@ -155,14 +304,35 @@
                     if (!code) return;
                     let p = code;
                     if (p.length < 4) return;
+                    if(code === '0000') {
+                        this.showTable = true;
+                        return;
+                    }
                     let n1 = parseInt(p.substring(0, 2));
                     let n2 = parseInt(p.substring(2));
+                    n1--;
+                    n2--;
                     if (n1 == n2 || n1 >= this.nameList.length || n2 >= this.nameList.length) return;
                     var temp = this.nameList[n1];
                     this.nameList[n1] = this.nameList[n2];
                     this.nameList[n2] = temp;
 
-                    this.showNames = true;
+                    var temp1 = this.placeList[n1];
+                    this.placeList[n1] = this.placeList[n2];
+                    this.placeList[n2] = temp1;
+
+                    this.showTable = true;
+                },
+                showPeople() {
+                    this.dataList = ref(this.nameList);
+                    this.peopleSelected = true;
+                    console.log(this.dataList[0]);
+                
+                },
+                showPlaces() {
+                    this.dataList = this.placeList;
+                    this.peopleSelected = false;
+                    console.log(this.dataList[0])
                 }
             }
         }).mount('#app')
