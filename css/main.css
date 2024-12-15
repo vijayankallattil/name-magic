@@ -1,7 +1,7 @@
 body {
     background-color: #efefef;
     background-image: url('../img/lightning.jpg');
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     background-size: cover;
 }
 
